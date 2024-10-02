@@ -13,6 +13,9 @@
     "paths": {
       "@config": ["./src/config"],
       "@modules": ["./src/modules"],
+      "@filters": ["./src/filters"],
+      "@decorators": ["./src/decorators"],
+      "@guards": ["./src/guards"],
     },
     "incremental": true,
     "skipLibCheck": true,

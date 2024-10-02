@@ -1,7 +1,9 @@
 import { appConfig, dbConfig } from "@config";
-import { User, UserModule } from "@modules";
+import { CheckAuthGuard } from "@guards";
+import { Article, ArticleModule, User, UserModule } from "@modules";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { SequelizeModule } from "@nestjs/sequelize";
 
 @Module({
@@ -22,17 +24,21 @@ import { SequelizeModule } from "@nestjs/sequelize";
         database: config.get<string>('dbConfig.dbName'),
         autoLoadModels: true,
         synchronize: true,
-        models: [User],
+        models: [User, Article],
         logging: false,
         sync: {
           alter: true,
-          force: false
+          // force: true
         }
       }),
     }),
-    UserModule
+    UserModule,
+    ArticleModule
   ],
   controllers: [],
-  providers: [],
+  providers: [{
+    useClass: CheckAuthGuard,
+    provide: APP_GUARD
+  }],
 })
 export class AppModule { };

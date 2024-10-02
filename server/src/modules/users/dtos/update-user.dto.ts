@@ -17,7 +17,5 @@ export class UpdateUserDto implements Omit<IUpdateUserRequest,'id'>{
     @IsString()
     password: string;
 
-    @IsOptional()
-    @IsString()
-    image_url: string;
+    image: any;
 }

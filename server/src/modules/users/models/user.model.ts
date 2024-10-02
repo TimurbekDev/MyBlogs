@@ -1,5 +1,6 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { UserRoles } from "../enums";
+import { Article } from "@modules";
 
 @Table({
     tableName: 'users',
@@ -43,4 +44,7 @@ export class User extends Model {
         allowNull: true,
     })
     image : string;
+
+    @HasMany(()=>Article)
+    articles : Article[]
 }
