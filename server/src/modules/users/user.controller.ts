@@ -1,17 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseFilters, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, SetMetadata, UploadedFile, UseFilters, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto, UpdateUserDto } from "./dtos";
 import { User } from "./models";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { multerConfig } from "@config";
-import { Protected } from "@decorators";
+import { Protected, Roles } from "@decorators";
 
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post()
-    @Protected(true)
     @UseInterceptors(FileInterceptor('image', multerConfig))
     async addUser(
         @Body() createUserDto: CreateUserDto,

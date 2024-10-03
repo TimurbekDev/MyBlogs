@@ -1,16 +1,17 @@
-import { appConfig, dbConfig } from "@config";
-import { CheckAuthGuard } from "@guards";
-import { Article, ArticleModule, User, UserModule } from "@modules";
+import { appConfig, dbConfig, jwtConfig } from "@config";
+import { CheckAuthGuard, CheckRoleGuard } from "@guards";
+import { Article, ArticleModule, AuthModule, User, UserModule } from "@modules";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
 import { SequelizeModule } from "@nestjs/sequelize";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, dbConfig]
+      load: [appConfig, dbConfig , jwtConfig]
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
@@ -28,16 +29,21 @@ import { SequelizeModule } from "@nestjs/sequelize";
         logging: false,
         sync: {
           alter: true,
-          // force: true
+          // force : true
         }
       }),
     }),
     UserModule,
-    ArticleModule
+    ArticleModule,
+    AuthModule,
+    JwtModule
   ],
   controllers: [],
   providers: [{
     useClass: CheckAuthGuard,
+    provide: APP_GUARD
+  },{
+    useClass : CheckRoleGuard,
     provide: APP_GUARD
   }],
 })

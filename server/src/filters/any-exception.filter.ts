@@ -1,6 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import { JsonWebTokenError } from '@nestjs/jwt';
 import { Request, Response } from 'express';
-import { UniqueConstraintError, ValidationError } from 'sequelize';
+import { ValidationError } from 'sequelize';
 
 @Catch()
 export class AnyExceptionFilter implements ExceptionFilter {
@@ -22,9 +23,9 @@ export class AnyExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof ValidationError) {
-      
-      return response.status(500).json({
-        statusCode: 500,
+
+      return response.status(409).json({
+        statusCode: 409,
         timestamp: new Date().toISOString(),
         path: request.url,
         message: exception.errors[0].message,
@@ -32,6 +33,15 @@ export class AnyExceptionFilter implements ExceptionFilter {
       });
     }
 
+    if (exception instanceof JsonWebTokenError) {
+      return response.status(401).json({
+        statusCode: 401,
+        timestamp: new Date().toISOString(),
+        path: request.url,
+        message: exception.message,
+        name: exception.name
+      });
+    }
     response.status(500).json({
       statusCode: 500,
       timestamp: new Date().toISOString(),

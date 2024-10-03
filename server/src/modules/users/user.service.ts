@@ -5,70 +5,76 @@ import { InjectModel } from "@nestjs/sequelize";
 import { User } from "./models";
 import { ICreateUserRequest, IUpdateUserRequest } from "./interfaces";
 import { Article } from '../articles';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User) private userModel : typeof User){}
+    constructor(@InjectModel(User) private userModel: typeof User) { }
 
-    async create(payload : ICreateUserRequest):Promise<User>{
+    async create(payload: ICreateUserRequest): Promise<User> {
+
+        const hashedPassword = await hash(payload.password, 12)
+
         const newUser = await this.userModel.create({
             full_name: payload.full_name,
             email: payload.email,
-            password : payload.password,
-            role : payload.role,
-            image : payload.image
+            password: hashedPassword,
+            role: payload.role,
+            image: payload.image
         })
 
         return await this.findById(newUser.id)
     }
 
-    async findAll():Promise<User[]>{
+    async findAll(): Promise<User[]> {
         return await this.userModel.findAll({
-            attributes : {
-                exclude : ['password','updatedAt','createdAt']
+            attributes: {
+                exclude: ['password', 'updatedAt', 'createdAt']
             },
-            include : [Article]
+            include: [Article]
         });
     }
 
-    async findById(id:number):Promise<User>{
-        const user = await this.userModel.findByPk(id,{
-            attributes : {
-                exclude : ['password','updatedAt','createdAt']
+    async findById(id: number): Promise<User> {
+        const user = await this.userModel.findByPk(id, {
+            attributes: {
+                exclude: ['password', 'updatedAt', 'createdAt']
             }
         })
 
-        if(!user)
+        if (!user)
             throw new NotFoundException()
 
         return user
     }
 
-    async updateById(payload : IUpdateUserRequest):Promise<User>{
+    async updateById(payload: IUpdateUserRequest): Promise<User> {
 
         const user = await this.findById(payload.id)
 
-        if(user.image)
-            fs.unlink(join(__dirname,'..','..','..','uploads',user.image))
+        if (user.image)
+            fs.unlink(join(__dirname, '..', '..', '..', 'uploads', user.image))
+
+        const hashedPassword = await hash(payload.password, 12)
 
         await user.update({
             full_name: payload.full_name,
             email: payload.email,
-            password : payload.password,
-            role : payload.role,
-            image :  payload.image
+            password: hashedPassword,
+            role: payload.role,
+            image: payload.image
         })
 
         return await this.findById(user.id)
 
     }
 
-    async deleteById(id:number):Promise<boolean>{
+    async deleteById(id: number): Promise<boolean> {
 
         const user = await this.findById(id)
 
-        if(user.image)
-            fs.unlink(join(__dirname,'..','..','..','uploads',user.image))
+        if (user.image)
+            fs.unlink(join(__dirname, '..', '..', '..', 'uploads', user.image))
 
         await user.destroy()
         return true

@@ -16,6 +16,7 @@
       "@filters": ["./src/filters"],
       "@decorators": ["./src/decorators"],
       "@guards": ["./src/guards"],
+      "@utils": ["./src/utils"],
     },
     "incremental": true,
     "skipLibCheck": true,
