@@ -1,15 +1,14 @@
-import { Module } from "@nestjs/common";
-import { ArticleService } from "./article.service";
+import { forwardRef, Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { Article } from "./models";
-import { ArticleController } from "./article.controller";
-import { User } from "../users";
+import { Article, ArticleController, ArticleService, UserModule } from "@modules";
 
 @Module({
     imports : [
-        SequelizeModule.forFeature([Article,User])
+        SequelizeModule.forFeature([Article]),
+        forwardRef(()=>UserModule)
     ],
     controllers : [ArticleController],
-    providers : [ArticleService]
+    providers : [ArticleService],
+    exports : [ArticleService]
 })
 export class ArticleModule {}

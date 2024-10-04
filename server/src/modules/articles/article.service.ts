@@ -1,21 +1,21 @@
 import { join } from 'path';
 import * as fs from 'fs/promises'
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Article } from "./models";
-import { User } from "../users";
+import {  UserService } from "../users";
 import { ICreateArticleRequest, IUpdateArticleRequest } from "./interfaces";
 
 @Injectable()
 export class ArticleService {
     constructor(
         @InjectModel(Article) private articleModel: typeof Article,
-        @InjectModel(User) private userModel: typeof User
+        @Inject(UserService) private userService: UserService
     ) { }
 
     async create(payload: ICreateArticleRequest): Promise<Article> {
 
-        const user = await this.userModel.findByPk(payload.user_id)
+        const user = await this.userService.findById(payload.user_id)
         if (!user)
             throw new NotFoundException('User not found')
 

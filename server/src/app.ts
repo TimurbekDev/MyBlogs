@@ -40,11 +40,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
   ],
   controllers: [],
   providers: [{
-    useClass: CheckAuthGuard,
-    provide: APP_GUARD
-  },{
-    useClass : CheckRoleGuard,
-    provide: APP_GUARD
+    useClass : CheckAuthGuard,
+    provide : APP_GUARD
   }],
 })
 export class AppModule { };

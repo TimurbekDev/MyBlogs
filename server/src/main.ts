@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app';
 import { ConfigService } from '@nestjs/config';
 import { AnyExceptionFilter } from '@filters';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function startApp() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,16 @@ async function startApp() {
   app.setGlobalPrefix('/api/v1')
 
   app.useGlobalFilters(new AnyExceptionFilter())
+
+  const config = new DocumentBuilder()
+    .setTitle('My Blog')
+    .setDescription('My Blog API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
 
   await app.listen(
     configService.get<number>('appConfig.port'),

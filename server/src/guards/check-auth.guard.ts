@@ -36,7 +36,7 @@ export class CheckAuthGuard implements CanActivate {
             const {_ , role} = this.jwtService.verify(accessToken, {
                 secret: this.configService.get<string>('jwtConfig.access_secret_key')
             })
-
+                        
             request.headers.role = role
 
             return true

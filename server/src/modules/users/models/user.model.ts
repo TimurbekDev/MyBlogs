@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
-import { UserRoles } from "../enums";
+import { UserRoles } from "../enums/user-role.enum";
 import { Article } from "@modules";
 
 @Table({

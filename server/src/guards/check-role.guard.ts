@@ -22,10 +22,13 @@ export class CheckRoleGuard implements CanActivate {
         const request = ctx.getRequest<Request>()
 
         const roles = this.reflector.get(Roles,context.getHandler())
+        console.log(roles,request.headers.role);
 
-        if(!(roles.includes(request.headers.role.toString())))
+        if(!(roles.includes(String(request.headers.role))))
             throw new ForbiddenException('You have not access to this enpoint')
 
         return true
+
+        
     }
 }

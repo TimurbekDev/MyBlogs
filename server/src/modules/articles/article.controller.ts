@@ -4,7 +4,9 @@ import { multerConfig } from "@config";
 import { ArticleService } from "./article.service";
 import { CreateArticleDto, UpdateArticleDto } from "./dtos";
 import { Article } from "./models";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Articles')
 @Controller('articles')
 export class ArticleController {
     constructor(private readonly articleService: ArticleService) { }
