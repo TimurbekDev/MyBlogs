@@ -1,21 +1,21 @@
 import { join } from 'path';
 import * as fs from 'fs/promises'
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Article } from "./models";
-import {  UserService } from "../users";
+import { User } from "../users";
 import { ICreateArticleRequest, IUpdateArticleRequest } from "./interfaces";
 
 @Injectable()
 export class ArticleService {
     constructor(
         @InjectModel(Article) private articleModel: typeof Article,
-        @Inject(UserService) private userService: UserService
+        @InjectModel(User) private userModel : typeof User
     ) { }
 
     async create(payload: ICreateArticleRequest): Promise<Article> {
 
-        const user = await this.userService.findById(payload.user_id)
+        const user = await this.userModel.findByPk(payload.user_id)
         if (!user)
             throw new NotFoundException('User not found')
 
@@ -52,8 +52,6 @@ export class ArticleService {
     async updateById(payload: IUpdateArticleRequest): Promise<Article> {
         const article = await this.findById(payload.id)
 
-        if (!article)
-            throw new NotFoundException('Article not found')
         if (article.image)
             fs.unlink(join(__dirname, '..', '..', '..', 'uploads', article.image))
 

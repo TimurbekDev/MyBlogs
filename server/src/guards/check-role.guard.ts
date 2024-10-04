@@ -1,8 +1,6 @@
 import { Roles } from "@decorators";
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { Observable } from "rxjs";
 
@@ -27,8 +25,6 @@ export class CheckRoleGuard implements CanActivate {
         if(!(roles.includes(String(request.headers.role))))
             throw new ForbiddenException('You have not access to this enpoint')
 
-        return true
-
-        
+        return true   
     }
 }

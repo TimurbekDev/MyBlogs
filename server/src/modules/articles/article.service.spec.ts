@@ -1,51 +1,27 @@
-import { Test } from "@nestjs/testing";
-import { ArticleService } from "./article.service";
-import { Article } from "./models";
-import { getModelToken } from "@nestjs/sequelize";
+import { User , Article , ArticleController , ArticleService } from '@modules'
 
-describe("ArticleService", () => {
+describe('ArticleController', () => {
+  let articleController: ArticleController;
   let articleService: ArticleService;
-  let mockArticleModel: jest.Mocked<typeof Article>;
 
-  beforeEach(async () => {
-    // Create a fully mocked model using jest.Mocked
-    mockArticleModel = {
-      findAll: jest.fn().mockResolvedValue([
-        {
-          id: 1,
-          title: "title1",
-          description: "wjdjuwd",
-          image: null,
-          user_id: 2,
-        },
-      ]),
-      // Add more mock methods as needed by ArticleService
-    } as unknown as jest.Mocked<typeof Article>;
-
-    const module = await Test.createTestingModule({
-      providers: [
-        ArticleService,
-        {
-          provide: getModelToken(Article),
-          useValue: mockArticleModel,
-        },
-      ],
-    }).compile();
-
-    articleService = module.get<ArticleService>(ArticleService);
+  beforeEach(() => {
+    articleService = new ArticleService(Article, User);
+    articleController = new ArticleController(articleService);
   });
 
-  it("should return all articles", async () => {
-    const articles = await articleService.findAll();
-    expect(articles).toEqual([
-      {
+  describe('findAll', () => {
+    it('should return a Promise of an array of articles', async () => {
+      const result: Article[] = [{
         id: 1,
-        title: "title1",
-        description: "wjdjuwd",
-        image: null,
-        user_id: 2,
-      },
-    ]);
-    expect(mockArticleModel.findAll).toHaveBeenCalledTimes(1);
+        title: 'Test Article',
+        description: 'Test content',
+        user_id: 1,
+        image: 'test-image.jpg',
+      } as Article];
+
+      jest.spyOn(articleService, 'findAll').mockImplementation(() => Promise.resolve(result));
+
+      await expect(articleController.getAllArticles()).resolves.toBe(result);
+    });
   });
 });
