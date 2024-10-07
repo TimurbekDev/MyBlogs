@@ -1,0 +1,16 @@
+{
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": "./test",
+    "testRegex": ".*\\.e2e-spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+    "^@modules": "<rootDir>/../src/modules",
+    "^@decorators": "<rootDir>/../src/decorators",
+    "^@guards": "<rootDir>/../src/guards",
+    "^@filters": "<rootDir>/../src/filters",
+    "^@config": "<rootDir>/../src/config"
+  },
+    "testEnvironment": "node"
+  }

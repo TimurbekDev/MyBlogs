@@ -3,15 +3,20 @@ import { AppModule } from './app';
 import { ConfigService } from '@nestjs/config';
 import { AnyExceptionFilter } from '@filters';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function startApp() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{
+    
+    cors : true
+  });
 
   const configService = app.get(ConfigService)
 
   app.setGlobalPrefix('/api/v1')
 
   app.useGlobalFilters(new AnyExceptionFilter())
+  app.useGlobalPipes(new ValidationPipe())
 
   const config = new DocumentBuilder()
     .setTitle('My Blog')

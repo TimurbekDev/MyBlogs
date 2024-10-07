@@ -39,9 +39,9 @@ import { SequelizeModule } from "@nestjs/sequelize";
     JwtModule
   ],
   controllers: [],
-  providers: [{
-    useClass : CheckAuthGuard,
-    provide : APP_GUARD
-  }],
+  // providers: [{
+  //   useClass : CheckAuthGuard,
+  //   provide : APP_GUARD
+  // }],
 })
 export class AppModule { };

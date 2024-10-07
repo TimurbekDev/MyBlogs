@@ -10,17 +10,19 @@ describe('ArticleController', () => {
   });
 
   describe('findAll', () => {
-    it('should return a Promise of an array of articles', async () => {
+    it('should return an array of articles', async () => {
       const result: Article[] = [{
         id: 1,
-        title: 'Test Article',
-        description: 'Test content',
+        title: 'bhdbkbker',
+        description: 'description',
         user_id: 1,
-        image: 'test-image.jpg',
+        image: 'dsjjdcjr',
       } as Article];
 
       jest.spyOn(articleService, 'findAll').mockImplementation(() => Promise.resolve(result));
 
+      console.log(await articleController.getAllArticles());
+      
       await expect(articleController.getAllArticles()).resolves.toBe(result);
     });
   });

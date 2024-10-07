@@ -10,20 +10,22 @@ export class AnyExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
+    
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
-
+      console.log('Http ',exception.getResponse())
+      
       return response.status(status).json({
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url,
-        message: exception.message,
+        message: exception.getResponse(),
         name: exception.name
       });
     }
 
-    if (exception instanceof ValidationError) {
-
+    if (exception instanceof ValidationError) { 
+      console.log('Valid ',exception.errors[0].message)     
       return response.status(409).json({
         statusCode: 409,
         timestamp: new Date().toISOString(),
@@ -33,7 +35,9 @@ export class AnyExceptionFilter implements ExceptionFilter {
       });
     }
 
+
     if (exception instanceof JsonWebTokenError) {
+      console.log('JwsonWeb ',exception.message)     
       return response.status(401).json({
         statusCode: 401,
         timestamp: new Date().toISOString(),
@@ -42,6 +46,9 @@ export class AnyExceptionFilter implements ExceptionFilter {
         name: exception.name
       });
     }
+
+    console.log(exception);
+
     response.status(500).json({
       statusCode: 500,
       timestamp: new Date().toISOString(),

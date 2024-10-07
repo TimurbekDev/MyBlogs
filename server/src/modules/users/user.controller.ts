@@ -14,9 +14,9 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post()
-    @Protected(true)
-    @Roles(['admin'])
-    @UseGuards(CheckRoleGuard)
+    // @Protected(true)
+    // @Roles(['admin'])
+    // @UseGuards(CheckRoleGuard)
     @UseInterceptors(FileInterceptor('image', multerConfig))
     async addUser(
         @Body() createUserDto: CreateUserDto,
@@ -28,24 +28,24 @@ export class UserController {
     }
 
     @Get()
-    @Protected(true)
-    @Roles(['admin','user'])
-    @UseGuards(CheckRoleGuard)
+    // @Protected(true)
+    // @Roles(['admin','user'])
+    // @UseGuards(CheckRoleGuard)
     async getAllUsers(): Promise<User[]> {
         return await this.userService.findAll();
     }
 
-    @Protected(true)
     @Get('/:userId')
+    // @Protected(true)
     async getUserById(@Param('userId') id: number): Promise<User> {
         return await this.userService.findById(id);
     }
 
     @Patch('/:userId')
-    @Protected(true)
-    @Roles(['admin','user'])
-    @UseGuards(CheckRoleGuard)
-    @UseInterceptors(FileInterceptor('image',multerConfig))
+    // @Protected(true)
+    // @Roles(['admin','user'])
+    // @UseGuards(CheckRoleGuard)
+    // @UseInterceptors(FileInterceptor('image',multerConfig))
     async updateUserById(
         @Param('userId') id: number,
         @Body() updateUserDto: UpdateUserDto,
@@ -61,9 +61,9 @@ export class UserController {
     }
 
     @Delete('/:userId')
-    @Protected(true)
-    @Roles(['admin'])
-    @UseGuards(CheckRoleGuard)
+    // @Protected(true)
+    // @Roles(['admin'])
+    // @UseGuards(CheckRoleGuard)
     async deleteUserById(@Param('userId') id: number): Promise<boolean> {
         return await this.userService.deleteById(id);
     }

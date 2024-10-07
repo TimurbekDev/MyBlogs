@@ -9,8 +9,12 @@ export class CreateUserDto implements ICreateUserRequest{
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
-    @MinLength(4)
-    @MaxLength(50)
+    @MinLength(4,{
+        message : 'Username must be at least 4 characters long',
+    })
+    @MaxLength(50,{
+        message  : 'Username must be at most 50 characters long',
+    })
     full_name: string;
 
     @ApiProperty()
